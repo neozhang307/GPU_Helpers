@@ -5,6 +5,8 @@
 // Simple way to do warmup
 // Simple way to do iterative kernel launch.
 // Base class with virtual function of launch and warmup
+#pragma once 
+
 inline void for_each_argument_address(void **) {}
 
 template <typename arg_t, typename... args_t>
