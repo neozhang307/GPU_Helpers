@@ -21,11 +21,11 @@ class LaunchHelper
 {
 private:
     /* data */
-    int warmupaim = 350; // 350ms
+    double warmupaim = 350; // 350ms
     int warmupiteration = 1000;
 
 public:
-    LaunchHelper(int warmupaim = 350, int warmupiteration = 1000);
+    LaunchHelper(double warmupaim = 350, int warmupiteration = 1000);
     ~LaunchHelper();
     template <typename Kernel_t, typename... Args>
     void launch(Kernel_t kernel, dim3 gdim, dim3 bdim, int executesm, cudaStream_t stream, Args &&...args);
@@ -35,7 +35,7 @@ public:
     void warmup(Kernel_t kernel, Function func, dim3 gdim, dim3 bdim, int executesm, cudaStream_t stream, Args &&...args);
 };
 template <bool useCooperativeLaunch>
-LaunchHelper<useCooperativeLaunch>::LaunchHelper(int givenwarmupsec, int givenwarmupiteration)
+LaunchHelper<useCooperativeLaunch>::LaunchHelper(double givenwarmupsec, int givenwarmupiteration)
 {
     this->warmupaim = givenwarmupsec;
     this->warmupiteration = givenwarmupiteration;
@@ -77,7 +77,7 @@ void LaunchHelper<useCooperativeLaunch>::warmup(Kernel_t kernel, dim3 gdim, dim3
     cudaEventSynchronize(warmstop);
     float warmelapsedTime;
     cudaEventElapsedTime(&warmelapsedTime, warstart, warmstop);
-    int nowwarmup = warmelapsedTime;
+    float nowwarmup = warmelapsedTime;
     int nowiter = (warmupaim + nowwarmup - 1) / nowwarmup;
     for (int out = 0; out < nowiter; out++)
     {
